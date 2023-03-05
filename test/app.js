@@ -9,6 +9,7 @@ import { OK, CREATED, FORBIDDEN, UNAUTHORIZED } from 'http-status';
 import { Op } from 'sequelize';
 import server from '../src/app';
 import models from '../src/database/models';
+import { QUOTA_TYPES } from '../src/utils/variable';
 
 process.env.NODE_ENV = 'test';
 const should = chai.should();
@@ -22,6 +23,7 @@ const mockClient = {
   companyName: 'XYZ client',
   email: 'xyz_test@max.rw',
   phone: '0788536933',
+  quotaType: QUOTA_TYPES[2],
 };
 
 describe('Global Rate Limits ', async () => {

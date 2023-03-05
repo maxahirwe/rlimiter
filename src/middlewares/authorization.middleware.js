@@ -33,6 +33,7 @@ export default async (req, res, next) => {
           res,
         );
       }
+      req.client = client;
       next();
     } else {
       return ResponseService.error(

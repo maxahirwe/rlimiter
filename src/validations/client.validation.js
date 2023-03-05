@@ -35,7 +35,7 @@ class UserValidation {
         .trim()
         .valid(...QUOTA_TYPES)
         .default(QUOTA_TYPES[0])
-        .optional(),
+        .required(),
     });
     return schema.validate(body, { abortEarly: false });
   }
