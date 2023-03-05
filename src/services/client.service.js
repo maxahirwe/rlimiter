@@ -22,7 +22,6 @@ class ClientService {
    * @returns {Object} Registered User
    */
   static async create(body) {
-    console.log(_.omit(body, ['quotaType']));
     return models.sequelize.transaction(async (transaction) => {
       const plainKey = uuidv4();
       const clientIdentifier = uuidv4();

@@ -3,18 +3,19 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import routes from './routes';
-import configureSwagger from './swagger';
 import errorMiddleware from './middlewares/error.middleware';
 import requestLogger, { loggerFormat } from './utils/requestLogger';
 import { generalRequestsRateLimiter } from './middlewares/limiter.middleware';
 
+const { NODE_ENV } = process.env;
 const app = express();
 app.use(generalRequestsRateLimiter);
 app.use(cors());
-configureSwagger(app);
 app.use(helmet());
-app.use(morgan('dev'));
-app.use(morgan(loggerFormat, { stream: requestLogger.stream }));
+if (NODE_ENV !== 'test') {
+  app.use(morgan('dev'));
+  app.use(morgan(loggerFormat, { stream: requestLogger.stream }));
+}
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: '2mb' }));
 app.use('/', routes);

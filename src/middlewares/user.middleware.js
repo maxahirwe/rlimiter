@@ -2,7 +2,7 @@
 import { CONFLICT } from 'http-status';
 import _ from 'lodash';
 import ResponseService from '../services/response.service';
-import ClientService from '../services/user.service';
+import ClientService from '../services/client.service';
 
 /**
  * middleware to check uniqueness of client's accounts

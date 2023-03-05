@@ -15,10 +15,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // ApiKey.belongsTo(models.Client, {
-      //   foreignKey: 'clientId',
-      //   as: 'client',
-      // });
+      ApiKey.belongsTo(models.Client, {
+        foreignKey: 'clientId',
+        as: 'client',
+      });
     }
   }
   ApiKey.init(

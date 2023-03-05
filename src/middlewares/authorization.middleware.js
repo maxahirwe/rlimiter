@@ -1,6 +1,6 @@
 import { FORBIDDEN, UNAUTHORIZED } from 'http-status';
 import ResponseService from '../services/response.service';
-import ClientService from '../services/user.service';
+import ClientService from '../services/client.service';
 import BcryptService from '../services/bcrypt.service';
 
 /**
@@ -17,9 +17,6 @@ export default async (req, res, next) => {
     const clientKey = req.headers[authorizationHeaders[1]];
     if (clientIdentifier && clientKey) {
       const client = await ClientService.findBy({ clientIdentifier });
-      const { keys } = client;
-      const { key } = keys[0]; // consider multiple keys environment
-
       if (!client) {
         return ResponseService.error(
           UNAUTHORIZED,
@@ -27,7 +24,8 @@ export default async (req, res, next) => {
           res,
         );
       }
-      console.log('samples:', clientKey, key);
+      const { keys } = client;
+      const { key } = keys[0]; // consider multiple keys environment
       if (!BcryptService.comparePassword(clientKey, key)) {
         return ResponseService.error(
           UNAUTHORIZED,

@@ -1,10 +1,6 @@
-import { CREATED, OK, UNAUTHORIZED } from 'http-status';
-import _ from 'lodash';
-import { Op } from 'sequelize';
-import ClientService from '../services/user.service';
+import { CREATED } from 'http-status';
+import ClientService from '../services/client.service';
 import ResponseService from '../services/response.service';
-import BcryptService from '../services/bcrypt.service';
-import TokenService from '../services/token.service';
 import models from '../database/models';
 import logger from '../utils/logger';
 

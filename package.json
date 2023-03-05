@@ -4,12 +4,12 @@
   "description": "rate limited concept for a notification-service",
   "main": "index.js",
   "scripts": {
-    "dev:db-seed-test-user": "npx sequelize db:seed --seed testUsers.js",
     "dev:db-setup": "npm run migrate:drop && npm run migrate:up && npm run dev:db-seed-test-user",
     "dev:server": "export NODE_ENV=development && nodemon --exec babel-node src/server.js",
     "migrate:up": "npx sequelize-cli db:migrate",
     "seed:up": "npx sequelize-cli db:seed:all",
-    "migrate:drop": "npx sequelize-cli db:migrate:undo:all"
+    "migrate:drop": "npx sequelize-cli db:migrate:undo:all",
+    "test": "mocha 'test/**/*.js' --timeout 10000 --require @babel/register"
   },
   "repository": {
     "type": "git",
@@ -63,6 +63,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.3.0",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "mocha": "^2.4.5"
   }
 }
