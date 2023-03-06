@@ -23,3 +23,90 @@ The design question is, how should they try to solve these three issues:
 ● The rate limiting should work for a distributed setup, as the APIs are accessible through a
 cluster of servers.
 ● How would you handle throttling (soft and hard throttling etc.).
+
+# Solution
+
+## Setup
+
+- Install latest node version https://nodejs.org/en/download/ (Used v16.0.0+)
+- In root folder create a `.env` file
+
+```
+    cp .env.example .env
+```
+
+Or Manually Create it with the following details/credentials
+
+```
+    DATABASE_NAME=./e-tekana.sqlite
+    DB_USERNAME=sample
+    DB_PASSWORD=sample
+    DB_HOST=./e-tekana.sqlite
+    DB_DRIVER=sqlite
+    SWAGGER_BASE_URL=
+    PORT=3000
+    TZ=Africa/Kigali
+    EXPIRE_TIME=10d
+    SECRET=sampleSecret
+    SMTP_HOST=
+    SMTP_PORT=
+    SMTP_USER=
+    SMTP_PASSWORD=
+    FRONT_END_BASE_URL=
+	MONTLY_RESET_CRON=0 0 1 * *
+```
+
+- cd in project root folder, install dependencies, create & seed db and run server
+
+  ```
+    npm install
+  ```
+
+  ```
+    npm run dev:db-setup
+  ```
+
+  ```
+    npm run dev:server
+  ```
+
+- Testing
+
+  ```
+   npm run test
+  ```
+
+## Architecture
+
+- [ERD](https://dbdiagram.io/d/63a9ad957d39e42284e79027)
+- Technologies
+  - Server: NodeJS, Express Framework
+  - Database: Sequelize, Sqlite
+  - Style: REST architectural style
+- [END-POINTS DOCUMENTATION PUBLISHED](https://documenter.getpostman.com/view/16879881/2s93JnVSnt)
+- [END-POINTS DOCUMENTATION (POSTMAN)](https://universal-capsule-39502.postman.co/workspace/5975be7f-a315-4934-bca2-1c2b1e9ea2cc/collection/16879881-c7a6ece8-4ea8-4c19-9abd-e3d83604e9ac?action=share&creator=16879881)
+
+- The project contains an architectural approach to the whole intended core system (models, basic logic, authentication/authorisation).
+
+  - Use https://sqlitebrowser.org/dl/ to investigate the sqllite file
+
+### Models
+
+    - Client: model for any individual/company that intends to use the notification service.
+    - Apikey: model for authentication/authorisation keys used by clients to access the api
+
+### Authentication/Authorisation
+
+- ApiKeys in http headers
+  - Client-Id
+  - Client-key
+
+### Requirements
+
+1. Too many requests within the same time window from a client => WINDOW: overseen & calculated in req/min
+2. Too many requests from a specific client on a per month basis => MONTH: overseen & calculated in req/month
+3. Too many requests across the entire system => GLOBAL: applicable to whole api/cluster, overseen & calculated in req/min
+
+## Author
+
+[@maxahirwe](https://max.rw)
