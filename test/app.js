@@ -7,6 +7,7 @@ import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import { OK, CREATED, FORBIDDEN, UNAUTHORIZED } from 'http-status';
 import { Op } from 'sequelize';
+import { randEmail, randNumber } from '@ngneat/falso';
 import server from '../src/app';
 import models from '../src/database/models';
 import { QUOTA_TYPES } from '../src/utils/variable';
@@ -21,8 +22,8 @@ chai.use(chaiHttp);
 const mockClient = {
   appName: 'XYZ client',
   companyName: 'XYZ client',
-  email: 'xyz_test@max.rw',
-  phone: '0788536933',
+  email: randEmail(),
+  phone: `0788${randNumber({ length: 6 })[0]}`,
   quotaType: QUOTA_TYPES[2],
 };
 
@@ -80,8 +81,10 @@ describe('Clients', async () => {
         phone,
       },
     });
-    await ApiKey.destroy({ where: { clientId: client.id } });
-    await client.destroy();
+    if (client) {
+      await ApiKey.destroy({ where: { clientId: client.id } });
+      await client.destroy();
+    }
   });
 
   /*
