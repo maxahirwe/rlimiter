@@ -20,9 +20,9 @@ The design question is, how should they try to solve these three issues:
 
 ## Points to look for:
 
-● The rate limiting should work for a distributed setup, as the APIs are accessible through a
-cluster of servers.
-● How would you handle throttling (soft and hard throttling etc.).
+- The rate limiting should work for a distributed setup, as the APIs are accessible through a
+  cluster of servers.
+- How would you handle throttling (soft and hard throttling etc.).
 
 # Solution
 
@@ -56,7 +56,7 @@ Or Manually Create it with the following details/credentials
 	MONTLY_RESET_CRON=0 0 1 * *
 ```
 
-- cd in project root folder, install dependencies, create & seed db and run server
+- cd in project root folder, install dependencies, run migrations, start server
 
   ```
     npm install
@@ -78,7 +78,7 @@ Or Manually Create it with the following details/credentials
 
 ## Architecture
 
-- [ERD](https://dbdiagram.io/d/63a9ad957d39e42284e79027)
+- [ERD](https://dbdiagram.io/d/640544d4296d97641d859679)
 - Technologies
   - Server: NodeJS, Express Framework
   - Database: Sequelize, Sqlite
@@ -92,12 +92,12 @@ Or Manually Create it with the following details/credentials
 
 ### Models
 
-    - Client: model for any individual/company that intends to use the notification service.
-    - Apikey: model for authentication/authorisation keys used by clients to access the api
+    - Client: model for an individual or company that intends to use the notification service.
+    - Apikey: model for authentication/authorisation keys used by clients to access the api.
 
 ### Authentication/Authorisation
 
-- ApiKeys in http headers
+- Api Keys in HTTP headers
   - Client-Id
   - Client-key
 
