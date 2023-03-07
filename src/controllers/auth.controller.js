@@ -42,7 +42,8 @@ class AuthController {
    */
   static async profile(req, res, next) {
     try {
-      const { client } = req;
+      const { data } = req;
+      const { client } = data;
       const { keys } = client;
 
       ResponseService.success(

@@ -29,6 +29,7 @@ The design question is, how should they try to solve these three issues:
 ## Setup
 
 - Install latest node version https://nodejs.org/en/download/ (Used v16.0.0+)
+- Install Redis https://redis.io/docs/getting-started/installation/
 - In root folder create a `.env` file
 
 ```
@@ -57,6 +58,10 @@ Or Manually Create it with the following details/credentials
 ```
 
 - cd in project root folder, install dependencies, run migrations, start server
+
+  ```
+    redis-server
+  ```
 
   ```
     npm install
@@ -106,6 +111,11 @@ Or Manually Create it with the following details/credentials
 1. Too many requests within the same time window from a client => WINDOW: overseen & calculated in req/min
 2. Too many requests from a specific client on a per month basis => MONTH: overseen & calculated in req/month
 3. Too many requests across the entire system => GLOBAL: applicable to whole api/cluster, overseen & calculated in req/min
+
+## Documentation
+
+- ![ERD.png](/documentation/erd.png)
+- [Presentation Dock](https://docs.google.com/presentation/d/1mekHQsbiDj3mefp5AIrIBRJqLq1BZDqQQkljwqaOqns/edit?usp=sharing)
 
 ## Author
 

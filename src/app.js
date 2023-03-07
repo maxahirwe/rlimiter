@@ -5,11 +5,11 @@ import morgan from 'morgan';
 import routes from './routes';
 import errorMiddleware from './middlewares/error.middleware';
 import requestLogger, { loggerFormat } from './utils/requestLogger';
-import { generalRequestsRateLimiter } from './middlewares/limiter.middleware';
+import { generalRateLimiterMiddleware } from './middlewares/limiter.middleware';
 
 const { NODE_ENV } = process.env;
 const app = express();
-app.use(generalRequestsRateLimiter);
+app.use(generalRateLimiterMiddleware);
 app.use(cors());
 app.use(helmet());
 if (NODE_ENV !== 'test') {

@@ -34,8 +34,8 @@ class UserValidation {
       quotaType: Joi.string()
         .trim()
         .valid(...QUOTA_TYPES)
-        .default(QUOTA_TYPES[0])
         .required(),
+      quota: Joi.number().integer().default(10).optional(),
     });
     return schema.validate(body, { abortEarly: false });
   }

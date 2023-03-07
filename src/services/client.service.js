@@ -27,9 +27,8 @@ class ClientService {
       const clientIdentifier = uuidv4();
 
       const apiKey = BcryptService.hashPassword(plainKey);
-      const defaultQuota = 10;
       const expiryPeriod = 6; // months
-      const { quotaType } = body;
+      const { quotaType, quota } = body;
 
       // create client account
       const client = {
@@ -50,7 +49,7 @@ class ClientService {
           clientId: clientCreation.id,
           quotaType,
           quotaMetric,
-          quota: defaultQuota,
+          quota,
           quotaUsed: 0,
           totalQuotaUsed: 0,
           approved: true,
