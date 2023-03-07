@@ -54,7 +54,7 @@ Or Manually Create it with the following details/credentials
     SMTP_USER=
     SMTP_PASSWORD=
     FRONT_END_BASE_URL=
-	MONTLY_RESET_CRON=0 0 1 * *
+	  MONTLY_RESET_CRON=0 0 1 * *
 ```
 
 - cd in project root folder, install dependencies, run migrations, start server
