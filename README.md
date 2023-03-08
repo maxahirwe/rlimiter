@@ -39,10 +39,10 @@ The design question is, how should they try to solve these three issues:
 Or Manually Create it with the following details/credentials
 
 ```
-    DATABASE_NAME=./e-tekana.sqlite
+    DATABASE_NAME=./notification-service.sqlite
     DB_USERNAME=sample
     DB_PASSWORD=sample
-    DB_HOST=./e-tekana.sqlite
+    DB_HOST=./notification-service.sqlite
     DB_DRIVER=sqlite
     SWAGGER_BASE_URL=
     PORT=3000
@@ -75,7 +75,7 @@ Or Manually Create it with the following details/credentials
     npm run dev:server
   ```
 
-- Testing
+- Testing (make sure migrations have been run and redis is running)
 
   ```
    npm run test
@@ -106,7 +106,7 @@ Or Manually Create it with the following details/credentials
   - Client-Id
   - Client-key
 
-### Requirements
+### Requirements covered
 
 1. Too many requests within the same time window from a client => WINDOW: overseen & calculated in req/min
 2. Too many requests from a specific client on a per month basis => MONTH: overseen & calculated in req/month
