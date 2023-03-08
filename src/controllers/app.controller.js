@@ -11,10 +11,7 @@ class AppController {
    * @returns {object} object
    */
   static landRoute(req, res) {
-    ResponseService.setSuccess(
-      OK,
-      'Rate Limited Notification Service landing route',
-    );
+    ResponseService.setSuccess(OK, 'Rate Limited Notification Service');
     return ResponseService.send(res);
   }
 
