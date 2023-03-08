@@ -55,6 +55,7 @@ Or Manually Create it with the following details/credentials
     SMTP_PASSWORD=
     FRONT_END_BASE_URL=
 	  MONTLY_RESET_CRON=0 0 1 * *
+    NODE_ENV=development
 ```
 
 - cd in project root folder, install dependencies, run migrations, start server
