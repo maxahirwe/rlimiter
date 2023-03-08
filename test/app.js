@@ -1,8 +1,4 @@
-/* eslint-disable function-paren-newline */
-/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-undef */
-/* eslint-disable import/no-extraneous-dependencies */
-
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import {

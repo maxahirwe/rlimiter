@@ -4,6 +4,9 @@ import { RateLimiterRedis } from 'rate-limiter-flexible';
 import ClientService from '../services/client.service';
 import ResponseService from '../services/response.service';
 import { QUOTA_METRICS, QUOTA_TYPES } from '../utils/variable';
+import logging from '../utils/logger';
+
+const logger = logging('limiter.middleware');
 
 const redisClient = new Redis({ enableOfflineQueue: false });
 
@@ -49,24 +52,21 @@ const rateLimiterGeneratorRedis = (requestsPerMinute = 100, key, res, next) => {
 const clientRateLimiterMiddleware = async (req, res, next) => {
   const { data } = req;
   let key = req.ip;
-  // console.log('key=>', key, req.path.indexOf('/api') === 0);
   if (data) {
     const { client } = data;
     const { clientIdentifier } = client;
     key = clientIdentifier;
-    console.log('key**', key);
     const apiKey = client.keys[0]; // TODO ADD support for many keys
     const { quotaType, quota, quotaUsed, quotaMetric } = apiKey;
     const adjustedQuota = quotaMetric === QUOTA_METRICS[0] ? quota / 60 : quota;
-    console.log(
-      `${quotaType} rate limit being applied  (${adjustedQuota} Req / ${quotaMetric})`,
+    logger.info(
+      `clientIdentifier(${clientIdentifier}):${quotaType} rate limit being applied (${adjustedQuota} Req/${quotaMetric})`,
     );
     if (quotaType === QUOTA_TYPES[0]) {
       // GLOBAL CLIENT RATELIMITS
       rateLimiterGeneratorRedis(100, key, res, next);
     } else if (quotaType === QUOTA_TYPES[1]) {
       // WINDOW RATELIMITS
-      console.log('WINDOW');
       rateLimiterGeneratorRedis(adjustedQuota, key, res, next);
     } else if (quotaType === QUOTA_TYPES[2]) {
       // MONTH RATELIMITS

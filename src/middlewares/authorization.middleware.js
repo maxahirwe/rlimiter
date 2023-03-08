@@ -25,7 +25,7 @@ export default async (req, res, next) => {
         );
       }
       const { keys } = client;
-      const { key } = keys[0]; // consider multiple keys environment
+      const { key } = keys[0]; // TODO consider multiple keys support
       if (!BcryptService.comparePassword(clientKey, key)) {
         return ResponseService.error(
           UNAUTHORIZED,

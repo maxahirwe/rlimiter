@@ -9,7 +9,7 @@ const Joi = JoiDefault.extend(JoiPhoneNumber);
  */
 class UserValidation {
   /**
-   * validates user object upon registration
+   * validates client object upon registration
    * @param {Object} body
    * @returns {Joi.ValidationResult} Joi validation result
    */

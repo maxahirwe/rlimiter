@@ -14,8 +14,8 @@ app.use(cors());
 app.use(helmet());
 if (NODE_ENV !== 'test') {
   app.use(morgan('dev'));
-  app.use(morgan(loggerFormat, { stream: requestLogger.stream }));
 }
+app.use(morgan(loggerFormat, { stream: requestLogger.stream }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: '2mb' }));
 app.use('/', routes);

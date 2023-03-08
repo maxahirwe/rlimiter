@@ -2,10 +2,6 @@ import _ from 'lodash';
 import { CREATED, OK } from 'http-status';
 import ClientService from '../services/client.service';
 import ResponseService from '../services/response.service';
-import models from '../database/models';
-import logger from '../utils/logger';
-
-const authenticationLogger = logger('authentication');
 
 /**
  * Auth controller class
@@ -45,7 +41,6 @@ class AuthController {
       const { data } = req;
       const { client } = data;
       const { keys } = client;
-
       ResponseService.success(
         OK,
         'client profile',
