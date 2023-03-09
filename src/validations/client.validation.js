@@ -9,7 +9,7 @@ const Joi = JoiDefault.extend(JoiPhoneNumber);
  */
 class UserValidation {
   /**
-   * validates user object upon registration
+   * validates client object upon registration
    * @param {Object} body
    * @returns {Joi.ValidationResult} Joi validation result
    */
@@ -34,8 +34,8 @@ class UserValidation {
       quotaType: Joi.string()
         .trim()
         .valid(...QUOTA_TYPES)
-        .default(QUOTA_TYPES[0])
-        .optional(),
+        .required(),
+      quota: Joi.number().integer().default(10).optional(),
     });
     return schema.validate(body, { abortEarly: false });
   }

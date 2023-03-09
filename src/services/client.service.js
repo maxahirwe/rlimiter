@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import dateTime from 'date-and-time';
 import models from '../database/models';
-import { QUOTA_METRICS } from '../utils/variable';
+import { QUOTA_METRICS, QUOTA_TYPES } from '../utils/variable';
 import BcryptService from './bcrypt.service';
 
 const { Client, ApiKey } = models;
@@ -27,9 +27,8 @@ class ClientService {
       const clientIdentifier = uuidv4();
 
       const apiKey = BcryptService.hashPassword(plainKey);
-      const defaultQuota = 100;
       const expiryPeriod = 6; // months
-      const { quotaType } = body;
+      const { quotaType, quota } = body;
 
       // create client account
       const client = {
@@ -42,15 +41,20 @@ class ClientService {
         transaction,
       });
 
-      // create client account keys
+      // create client account apiKeys
+      const quotaMetric =
+        quotaType === QUOTA_TYPES[2] ? QUOTA_METRICS[2] : QUOTA_METRICS[1];
       const keyCreation = await ApiKey.create(
         {
           clientId: clientCreation.id,
           quotaType,
-          quotaMetric: QUOTA_METRICS[1],
-          quota: defaultQuota,
+          quotaMetric,
+          quota,
           quotaUsed: 0,
+          totalQuotaUsed: 0,
           approved: true,
+          dateApproved: Date.now(),
+          lastQuotaUpdate: Date.now(),
           validUntil: dateTime.addMonths(new Date(), expiryPeriod),
           key: apiKey,
         },
@@ -59,7 +63,11 @@ class ClientService {
         },
       );
 
-      return { clientCreation, keyCreation, plainKey };
+      return {
+        clientCreation,
+        keyCreation: _.omit(keyCreation.dataValues, ['key']),
+        plainKey,
+      };
     });
   }
 
@@ -81,6 +89,49 @@ class ClientService {
     return Client.findOne({
       where: condition,
       include: [includeKeys],
+    });
+  }
+
+  /**
+   * ApiKey increase used quota
+   * @param {Object} apiKey
+   * @returns {Object} Registered User
+   */
+  static async quotaUsageIncrease(apiKey) {
+    const { lastQuotaUpdate } = apiKey;
+
+    return models.sequelize.transaction(async (transaction) => {
+      const keyUpdate = await apiKey.update(
+        {
+          lastQuotaUpdate,
+          quotaUsed: apiKey.quotaUsed + 1,
+          totalQuotaUsed: apiKey.totalQuotaUsed + 1,
+        },
+        {
+          transaction,
+        },
+      );
+
+      return keyUpdate;
+    });
+  }
+
+  /**
+   * Reset all monthly ApiKeys quotas
+   * @returns {Object} Registered User
+   */
+  static async resetMonthlyQuotas() {
+    return models.sequelize.transaction(async (transaction) => {
+      return ApiKey.update(
+        { lastQuotaUpdate: Date.now(), quotaUsed: 0 },
+        {
+          where: {
+            quotaType: QUOTA_TYPES[2],
+            approved: true,
+          },
+          transaction,
+        },
+      );
     });
   }
 }

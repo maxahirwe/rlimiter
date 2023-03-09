@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       companyAddress: DataTypes.STRING,
       email: DataTypes.STRING,
       phone: DataTypes.STRING,
+      callBackUrl: DataTypes.STRING,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
     },

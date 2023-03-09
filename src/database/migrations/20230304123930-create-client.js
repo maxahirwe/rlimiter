@@ -33,6 +33,7 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false,
       },
+      callBackUrl: { type: Sequelize.STRING, allowNull: true },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false,

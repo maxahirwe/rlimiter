@@ -1,14 +1,19 @@
-/* eslint-disable function-paren-newline */
-/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-undef */
-/* eslint-disable import/no-extraneous-dependencies */
-
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import { OK, CREATED, FORBIDDEN, UNAUTHORIZED } from 'http-status';
+import {
+  OK,
+  CREATED,
+  FORBIDDEN,
+  UNAUTHORIZED,
+  TOO_MANY_REQUESTS,
+} from 'http-status';
 import { Op } from 'sequelize';
+import { randEmail, randNumber } from '@ngneat/falso';
 import server from '../src/app';
 import models from '../src/database/models';
+import { QUOTA_TYPES } from '../src/utils/variable';
+import ClientService from '../src/services/client.service';
 
 process.env.NODE_ENV = 'test';
 const should = chai.should();
@@ -20,8 +25,10 @@ chai.use(chaiHttp);
 const mockClient = {
   appName: 'XYZ client',
   companyName: 'XYZ client',
-  email: 'xyz_test@max.rw',
-  phone: '0788536933',
+  email: randEmail(),
+  phone: `0788${randNumber({ length: 6 })[0]}`,
+  quotaType: QUOTA_TYPES[2],
+  quota: 20,
 };
 
 describe('Global Rate Limits ', async () => {
@@ -38,7 +45,7 @@ describe('Global Rate Limits ', async () => {
   ];
   let firstResponse;
 
-  describe('/GET ratelimits', () => {
+  describe('/GET general ratelimits', () => {
     before((done) => {
       chai
         .request(server)
@@ -78,8 +85,10 @@ describe('Clients', async () => {
         phone,
       },
     });
-    await ApiKey.destroy({ where: { clientId: client.id } });
-    await client.destroy();
+    if (client) {
+      await ApiKey.destroy({ where: { clientId: client.id } });
+      await client.destroy();
+    }
   });
 
   /*
@@ -144,6 +153,49 @@ describe('Clients', async () => {
           done();
         });
     });
-    // quotas testing   // should not pass quota per month
+
+    it('it should POST a client SMS and reduce MONTHLY quota', async (done) => {
+      const clientBefore = await ClientService.findBy({
+        clientIdentifier: apiClientId,
+      });
+      const { quotaUsed: quotaBefore } = clientBefore.keys[0];
+      chai
+        .request(server)
+        .post('/api/notification/sms')
+        .set('client-id', apiClientId)
+        .set('client-key', apiClientKey)
+        .send(mockClient)
+        .end(async (err, res) => {
+          res.should.have.status(OK);
+          const clientAfter = await ClientService.findBy({
+            clientIdentifier: apiClientId,
+          });
+          const { quotaUsed: quotaAfter } = clientAfter.keys[0];
+          expect(quotaBefore).lessThan(quotaAfter);
+          expect(quotaBefore + 1).equals(quotaAfter);
+          done();
+        });
+    });
+
+    it('it should not POST a client SMS without enough MONTHLY quota', async (done) => {
+      const client = await ClientService.findBy({
+        clientIdentifier: apiClientId,
+      });
+      const apiKey = client.keys[0];
+      apiKey.quota = 10;
+      apiKey.quotaUsed = 10;
+      await apiKey.save();
+
+      chai
+        .request(server)
+        .post('/api/notification/sms')
+        .set('client-id', apiClientId)
+        .set('client-key', apiClientKey)
+        .send(mockClient)
+        .end(async (err, res) => {
+          res.should.have.status(TOO_MANY_REQUESTS);
+          done();
+        });
+    });
   });
 });

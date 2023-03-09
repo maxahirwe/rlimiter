@@ -40,12 +40,24 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      totalQuotaUsed: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       approved: {
         type: Sequelize.BOOLEAN,
         default: false,
         allowNull: false,
       },
+      dateApproved: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
       validUntil: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      lastQuotaUpdate: {
         type: Sequelize.DATE,
         allowNull: false,
       },
