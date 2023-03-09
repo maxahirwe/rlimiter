@@ -1,6 +1,6 @@
 {
   "name": "r-limiter-notification-service",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "rate limited concept for a notification-service",
   "main": "index.js",
   "scripts": {
