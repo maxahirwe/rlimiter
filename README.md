@@ -116,7 +116,7 @@ Or Manually Create it with the following details/credentials
 ## Documentation
 
 - ![ERD.png](/documentation/erd.png)
-- [Presentation Dock](https://docs.google.com/presentation/d/1mekHQsbiDj3mefp5AIrIBRJqLq1BZDqQQkljwqaOqns/edit?usp=sharing)
+- [Presentation Deck](https://docs.google.com/presentation/d/1mekHQsbiDj3mefp5AIrIBRJqLq1BZDqQQkljwqaOqns/edit?usp=sharing)
 
 ## Author
 
